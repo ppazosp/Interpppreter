@@ -17,7 +17,7 @@ void HELP(char* unused){
 }
 
 void WORKSPACE(char* unused){
-    st_print_vars();
+    st_print_workspace();
 }
 
 void CLEAR(char* unused){

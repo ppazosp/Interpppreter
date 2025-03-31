@@ -8,8 +8,7 @@
 #include "error_handler.h"
 #include "functions.h"
 
-extern void yyparse(void);
-
+extern void init_syn_parsing(void);
 
 #define KEYWORDS_COUNT 15
 
@@ -168,7 +167,7 @@ int main(void){
     
     st_print();
 
-    yyparse();
+    init_syn_parsing();
 
     st_print();
 

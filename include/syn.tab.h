@@ -56,10 +56,12 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     GET = 258,                     /* GET  */
     LET = 259,                     /* LET  */
-    NUM = 260,                     /* NUM  */
-    UP = 261,                      /* UP  */
-    LW = 262,                      /* LW  */
-    NEG = 263                      /* NEG  */
+    QUIT = 260,                    /* QUIT  */
+    NUM = 261,                     /* NUM  */
+    UP = 262,                      /* UP  */
+    LW = 263,                      /* LW  */
+    ARG = 264,                     /* ARG  */
+    NEG = 265                      /* NEG  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -68,12 +70,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "src/syn.y"
+#line 56 "src/syn.y"
 
 double val;
 char* str;
 
-#line 77 "include/syn.tab.h"
+#line 79 "include/syn.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
