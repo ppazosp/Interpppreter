@@ -1,13 +1,17 @@
 #include <stdio.h>  
 #include <stdlib.h> 
 #include <math.h>
+#include <readline/history.h>
+#include <readline/readline.h>
 
 #include "constants.h"
 #include "symbol_table.h"
 #include "string.h"
 #include "error_handler.h"
 #include "functions.h"
+#include "lex.yy.h"
 
+extern int yyparse(void);
 extern void init_syn_parsing(void);
 
 #define KEYWORDS_COUNT 15
@@ -158,6 +162,28 @@ Token** create_keywords(void) {
     return keywords;
 }
 
+void repl_loop(void) {
+    using_history(); 
+
+    while (1) {
+        char *line = readline("> ");
+        if (!line) {
+            printf("\n");
+            break;
+        }
+
+        if (*line != '\0') {
+            add_history(line);
+        }
+
+        YY_BUFFER_STATE bp = yy_scan_string(line);
+        yyparse();
+        yy_delete_buffer(bp);
+
+        free(line);
+    }
+}
+
 int main(void){
 
     if (st_init(create_keywords(), KEYWORDS_COUNT) < 0) {
@@ -168,6 +194,8 @@ int main(void){
     st_print();
 
     init_syn_parsing();
+
+    repl_loop();
 
     st_print();
 

@@ -81,6 +81,7 @@ input:  prompt
 line:   prompt '\n'
         | prompt exp '\n' { if(show_value) { printf ("%.10g", $2); } printf("\n\n> "); fflush(stdout);}
         | prompt error '\n' { yyclearin; yyerrok; printf("\n> "); } ;
+        | prompt exp ';' '\n' { }
         | prompt QUIT { quit(); };
 
 prompt: { printf("> "); fflush(stdout); } ;
