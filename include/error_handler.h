@@ -9,6 +9,6 @@ void eh_printerr(const char* error, int mode, int line);
 
 void set_warn(int value);
 
-void yyerror (char* s);
+void yyerror (const char* s);
 
 #endif // ERROR_HANDLER_H

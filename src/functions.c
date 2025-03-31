@@ -2,38 +2,37 @@
 #include <stdlib.h>
 
 #include "functions.h"
+#include "symbol_table.h"
 
-double LOAD(double unused){
+void LOAD(char* unused){
     printf("LOAD");
-    return 1;
 }
 
-double QUIT(double unused){
+void QUIT(char* unused){
     printf("QUIT");
-    return 1;
 }
 
-double HELP(double unused){
+void HELP(char* unused){
     printf("HELP");
-    return 1;
 }
 
-double WORKSPACE(double unused){
-    printf("WORKSPACE");
-    return 1;
+void WORKSPACE(char* unused){
+    st_print_vars();
 }
 
-double CLEAR(double unused){
-    printf("CLEAR");
-    return 1;
+void CLEAR(char* unused){
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
 }
 
-double CLEAN(double unused){
-    printf("CLEAN");
-    return 1;
+void CLEAN(char* unused){
+    st_clean_vars();
+    printf("Workspace cleaned 🧹");
 }
 
-double ECHO(double unused){
+void ECHO(char* unused){
     printf("ECHO");
-    return 1;
 }

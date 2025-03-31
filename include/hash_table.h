@@ -19,7 +19,7 @@ typedef struct Hastable{
 HashTable* ht_create(size_t size);
 void ht_free(HashTable* ht);
 int ht_insert(HashTable* ht, Token* token);
-int ht_search(HashTable* ht, const char* key, Token** token);
+Token* ht_search(HashTable* ht, const char* key);
 int ht_delete(HashTable* ht, const char* key);
 
 #endif // HASH_TABLE_H

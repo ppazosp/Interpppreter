@@ -42,17 +42,17 @@ int ht_insert(HashTable* ht, Token* token) {
     return 0;
 }
 
-int ht_search(HashTable* ht, const char* key, Token** token) {
+Token* ht_search(HashTable* ht, const char* key) {
     unsigned long index = hash_function(key) % ht->size;
     Ht_item* item = ht->items[index];
     while (item) {
         if (strcmp(item->token->key, key) == 0) {
-            *token = item->token;
-            return 0;
+            return item->token;
+            
         }
         item = item->next;
     }
-    return -1;
+    return NULL;
 }
 
 int ht_delete(HashTable* ht, const char* key) {

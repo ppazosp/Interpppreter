@@ -9,10 +9,6 @@
 
 static char id_holder = 0;
 
-Token* _search_st(const char* key, int id, Value value) {
-    return st_search(key, id, value);
-}
-
 void _init_input_system(void){
     yylineno = 1;
 }
@@ -31,11 +27,12 @@ NUMERIC_LITERAL {INTEGER_LITERAL}|{FLOAT_LITERAL}
 
 SPC [ \t\r]
 
-MINUS [a-z]
-MAYUS [A-Z]
+LOWER [a-z]
+UPPER [A-Z]
 
-CONSTANT {MAYUS}({NUMERIC_LITERAL}|{MAYUS})*
-IDENTIFIER {MINUS}({NUMERIC_LITERAL}|{MINUS})*
+CONSTANT {UPPER}({NUMERIC_LITERAL}|{UPPER})*
+IDENTIFIER {LOWER}({NUMERIC_LITERAL}|{LOWER})*
+
 
 SYMBOL [+\-*/()^<>=]
 
@@ -47,36 +44,21 @@ CARRIAGE [\n]
 
 %%
 
-{NUMERIC_LITERAL}               {   yylval.val = atof(yytext);
-                                    return NUM; }
+{NUMERIC_LITERAL}               {   yylval.val = atof(yytext); return NUM; }
 
-{GET_SYMBOL}                           {   return GET; }
+{IDENTIFIER}                    {   yylval.str = strdup(yytext); return LW; }
 
-{LET_SYMBOL}                           {   return LET; }
+{CONSTANT}                      {   yylval.str = strdup(yytext); return UP; }
+
+{GET_SYMBOL}                    {   return GET; }
+
+{LET_SYMBOL}                    {   return LET; }                                
 
 {SYMBOL}                        {   return (int) yytext[0]; }
 
-{IDENTIFIER}                    {   Value value;
-                                    value.var = 0;
-                                    value.fnctptr = NULL;
-                                    Token* t = _search_st(yytext, IDENTIFIER, value);
-                                    yylval.tptr = t;
-                                    if(t->id == FUNCTION){ return FNCT; }
-                                    else{ return VAR; }
-                                }
-
-{CONSTANT}                      {   Value value;
-                                    value.var = 0;
-                                    value.fnctptr = NULL;
-                                    Token* t = _search_st(yytext, CONSTANT, value);
-                                    yylval.tptr = t;
-                                    if(t->id == FUNCTION){ return FNCT; }
-                                    else{ return CONSTANT; }
-                                }
-
 {SPC}+                          {   }
 
-{CARRIAGE}                      { return '\n'; }
+{CARRIAGE}                      {   return '\n'; }
 
 %%
 

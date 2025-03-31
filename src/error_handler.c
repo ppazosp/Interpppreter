@@ -24,6 +24,6 @@ void set_warn(int value){
     warn = value;
 }
 
-void yyerror(char* s){
-    fprintf(stderr, "%s\n", s);
+void yyerror(const char* s){
+    fprintf(stderr, "%s", s);
 }

@@ -1,18 +1,18 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-double LOAD(double unused);
+void LOAD(char* unused);
 
-double QUIT(double unused);
+void QUIT(char* unused);
 
-double HELP(double unused);
+void HELP(char* unused);
 
-double WORKSPACE(double unused);
+void WORKSPACE(char* unused);
 
-double CLEAR(double unused);
+void CLEAR(char* unused);
 
-double CLEAN(double unused);
+void CLEAN(char* unused);
 
-double ECHO(double unused);
+void ECHO(char* unused);
 
 #endif // FUNCTIONS_H

@@ -33,26 +33,82 @@ int st_init(Token** keywords, int size) {
     return 0;
 }
 
-Token* st_search(const char* key, int id, Value value) {
-    Token* token = NULL;
-    if (ht_search(st->ht, key, &token) == -1) {
-        token = malloc(sizeof(Token));
-        if (!token) {
-            eh_printerr("Malloc failed", FATAL_ERROR, 0);
-            exit(EXIT_FAILURE);
-        }
-        token->key = strdup(key);
-        token->id = id;
-        token->value = value;
-        ht_insert(st->ht, token);
-    }
-    return token;
+Token* st_search(const char* key) {
+    return ht_search(st->ht, key);
+}
+
+int st_insert(Token* token){
+    return ht_insert(st->ht, token);
 }
 
 void st_free(void) {
     if (!st) return;
     ht_free(st->ht);
     free(st);
+}
+
+void st_clean_vars(void){
+    for (size_t i = 0; i < st->ht->size; i++) {
+        Ht_item* item = st->ht->items[i];
+        Ht_item* next;
+
+        while (item) {
+            Token* token = item->token;
+            next = item->next; 
+
+            if(token->id == IDENTIFIER ){            
+                if ((ht_delete(st->ht, token->key)) == -1){
+                    eh_printerr("hash item could not be deleted", FATAL_ERROR, 0);
+                    exit(EXIT_FAILURE);
+                };
+            }
+
+            item = next;
+        }
+    }
+}
+
+void st_print_vars(void){
+
+    printf("\n\n\n=================================\n\n");
+
+    for (size_t i = 0; i < st->ht->size; i++) {
+        Ht_item* item = st->ht->items[i];
+        Ht_item* next;
+
+        while (item) {
+
+            Token* token = item->token;
+
+            if(token->id == IDENTIFIER ){            
+                printf("name: %s\nvalue: %.2lf", token->id, token->value.var);
+            }
+
+            item = item->next;
+
+            if(item != NULL) printf("\n\n\n----------------------------------\n\n");
+        }
+    }
+
+    printf("\n\n\n=================================\n\n");
+}
+
+void st_clean_consts(void){
+    for (size_t i = 0; i < st->ht->size; i++) {
+        Ht_item* item = st->ht->items[i];
+        Ht_item* next;
+
+        while (item) {
+            Token* token = item->token;
+
+            if ((ht_delete(st->ht, token->key)) == -1){
+                eh_printerr("hash item could not be deleted", FATAL_ERROR, 0);
+                exit(EXIT_FAILURE);
+            };
+
+            item = next;
+        }
+    }
 }
 
 void st_print(void) {
@@ -69,7 +125,7 @@ void st_print(void) {
         while (item) {
             Token* token = item->token;
 
-            if(token->id != FUNCTION){            
+            if(token->id == IDENTIFIER || token->id ==  CONSTANT ){            
                 printf("< %s, %d, %.2lf >\n", token->key, token->id, token->value.var);
             }else{
                 printf("< %s, %d, %p >\n", token->key, token->id, token->value.fnctptr);

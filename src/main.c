@@ -99,8 +99,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[8]->key = strdup("LOAD");
-        keywords[8]->id = FUNCTION;
-        keywords[8]->value.fnctptr = LOAD;
+        keywords[8]->id = COMMAND;
+        keywords[8]->value.cmdptr = LOAD;
 
         keywords[9] = malloc(sizeof(Token));
         if (!keywords[9]) {
@@ -108,8 +108,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[9]->key = strdup("QUIT");
-        keywords[9]->id = FUNCTION;
-        keywords[9]->value.fnctptr = QUIT;
+        keywords[9]->id = COMMAND;
+        keywords[9]->value.cmdptr = QUIT;
 
         keywords[10] = malloc(sizeof(Token));
         if (!keywords[10]) {
@@ -117,8 +117,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[10]->key = strdup("HELP");
-        keywords[10]->id = FUNCTION;
-        keywords[10]->value.fnctptr = HELP;
+        keywords[10]->id = COMMAND;
+        keywords[10]->value.cmdptr = HELP;
 
         keywords[11] = malloc(sizeof(Token));
         if (!keywords[11]) {
@@ -126,8 +126,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[11]->key = strdup("WORKSPACE");
-        keywords[11]->id = FUNCTION;
-        keywords[11]->value.fnctptr = WORKSPACE;
+        keywords[11]->id = COMMAND;
+        keywords[11]->value.cmdptr = WORKSPACE;
 
         keywords[12] = malloc(sizeof(Token));
         if (!keywords[12]) {
@@ -135,8 +135,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[12]->key = strdup("CLEAR");
-        keywords[12]->id = FUNCTION;
-        keywords[12]->value.fnctptr = CLEAR;
+        keywords[12]->id = COMMAND;
+        keywords[12]->value.cmdptr = CLEAR;
 
         keywords[13] = malloc(sizeof(Token));
         if (!keywords[13]) {
@@ -144,8 +144,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[13]->key = strdup("CLEAN");
-        keywords[13]->id = FUNCTION;
-        keywords[13]->value.fnctptr = CLEAN;
+        keywords[13]->id = COMMAND;
+        keywords[13]->value.cmdptr = CLEAN;
 
         keywords[14] = malloc(sizeof(Token));
         if (!keywords[14]) {
@@ -153,8 +153,8 @@ Token** create_keywords(void) {
             exit(EXIT_FAILURE);
         }
         keywords[14]->key = strdup("ECHO");
-        keywords[14]->id = FUNCTION;
-        keywords[14]->value.fnctptr = ECHO;
+        keywords[14]->id = COMMAND;
+        keywords[14]->value.cmdptr = ECHO;
     }
     return keywords;
 }

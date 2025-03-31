@@ -1,5 +1,6 @@
+#line 1 "src/lex.yy.c"
 
-#line 2 "lex.yy.c"
+#line 3 "src/lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -384,10 +385,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[37] =
     {   0,
-        0,    0,   10,    9,    7,    8,    4,    9,    1,    4,
-        4,    6,    5,    7,    1,    1,    1,    3,    0,    0,
-        6,    6,    0,    5,    5,    1,    2,    6,    6,    5,
-        5,    6,    6,    5,    5,    0
+        0,    0,   10,    9,    7,    8,    6,    9,    1,    6,
+        6,    3,    2,    7,    1,    1,    1,    5,    0,    0,
+        3,    3,    0,    2,    2,    1,    4,    3,    3,    2,
+        2,    3,    3,    2,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -483,8 +484,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lex.l"
-#line 2 "lex.l"
+#line 1 "src/lex.l"
+#line 2 "src/lex.l"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -495,17 +496,13 @@ char *yytext;
 
 static char id_holder = 0;
 
-Token* _search_st(const char* key, int id, Value value) {
-    return st_search(key, id, value);
-}
-
 void _init_input_system(void){
     yylineno = 1;
 }
 
-#line 506 "lex.yy.c"
+#line 503 "src/lex.yy.c"
 #define YY_NO_INPUT 1
-#line 508 "lex.yy.c"
+#line 505 "src/lex.yy.c"
 
 #define INITIAL 0
 
@@ -720,10 +717,10 @@ YY_DECL
 		}
 
 	{
-#line 48 "lex.l"
+#line 45 "src/lex.l"
 
 
-#line 726 "lex.yy.c"
+#line 723 "src/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -792,66 +789,51 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 50 "lex.l"
-{   yylval.val = atof(yytext);
-                                    return NUM; }
+#line 47 "src/lex.l"
+{   yylval.val = atof(yytext); return NUM; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 53 "lex.l"
-{   return GET; }
+#line 49 "src/lex.l"
+{   yylval.str = strdup(yytext); return LW; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 55 "lex.l"
-{   return LET; }
+#line 51 "src/lex.l"
+{   yylval.str = strdup(yytext); return UP; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 57 "lex.l"
-{   return (int) yytext[0]; }
+#line 53 "src/lex.l"
+{   return GET; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 59 "lex.l"
-{   Value value;
-                                    value.var = 0;
-                                    value.fnctptr = NULL;
-                                    Token* t = _search_st(yytext, IDENTIFIER, value);
-                                    yylval.tptr = t;
-                                    if(t->id == FUNCTION){ return FNCT; }
-                                    else{ return VAR; }
-                                }
+#line 55 "src/lex.l"
+{   return LET; }                                
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 68 "lex.l"
-{   Value value;
-                                    value.var = 0;
-                                    value.fnctptr = NULL;
-                                    Token* t = _search_st(yytext, CONSTANT, value);
-                                    yylval.tptr = t;
-                                    if(t->id == FUNCTION){ return FNCT; }
-                                    else{ return CONSTANT; }
-                                }
+#line 57 "src/lex.l"
+{   return (int) yytext[0]; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 77 "lex.l"
+#line 59 "src/lex.l"
 {   }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 79 "lex.l"
-{ return '\n'; }
+#line 61 "src/lex.l"
+{   return '\n'; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 81 "lex.l"
+#line 63 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 854 "lex.yy.c"
+#line 836 "src/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1827,7 +1809,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 81 "lex.l"
+#line 63 "src/lex.l"
 
 
 void init_lex_parsing(void){
