@@ -10,9 +10,14 @@
 #include "error_handler.h"
 #include "functions.h"
 #include "lex.yy.h"
+#include "stack.h"
 
 extern int yyparse(void);
 extern void init_syn_parsing(void);
+
+extern FILE *current_fp;
+extern Stack *fp_stack;
+extern void quit(void);
 
 #define KEYWORDS_COUNT 15
 
@@ -162,17 +167,37 @@ Token** create_keywords(void) {
     return keywords;
 }
 
+char *get_next_line(void) {
+    char *line = NULL;
+
+    if (current_fp != NULL) {
+
+        char buffer[64];
+        if (fgets(buffer, sizeof(buffer), current_fp)) {
+
+            line = strdup(buffer);
+        } else {
+            quit();
+            
+            line = strdup("\n");
+        }
+    } else {
+        line = readline("> ");
+    }
+    return line;
+}
+
 void repl_loop(void) {
-    using_history(); 
+    using_history();
 
     while (1) {
-        char *line = readline("> ");
+        char *line = get_next_line();
         if (!line) {
             printf("\n");
             break;
         }
 
-        if (*line != '\0') {
+        if (current_fp == NULL && *line != '\0') {
             add_history(line);
         }
 

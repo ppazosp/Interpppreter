@@ -10,7 +10,6 @@
 #define STACK_SIZE 8
 
 void _init_input_system(void){
-    yyin = stdin;
     yylineno = 1;
 }
 
@@ -46,8 +45,6 @@ LET_SYMBOL "<="
 
 QUOTE \"
 
-CARRIAGE [\n]
-
 %%
 
 {NUMERIC_LITERAL}               {   yylval.val = atof(yytext); return NUM; }
@@ -70,9 +67,7 @@ CARRIAGE [\n]
 
 {SPC}+                          {   }
 
-{CARRIAGE}                      {   return '\n'; }
-
-<<EOF>>                         {   yylval.str = strdup("QUIT"); return QUIT; }
+\n                              {   }
 
 %%
 

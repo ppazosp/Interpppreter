@@ -502,14 +502,13 @@ char *yytext;
 #define STACK_SIZE 8
 
 void _init_input_system(void){
-    yyin = stdin;
     yylineno = 1;
 }
 
-#line 509 "src/lex.yy.c"
+#line 508 "src/lex.yy.c"
 #define YY_NO_INPUT 1
 
-#line 512 "src/lex.yy.c"
+#line 511 "src/lex.yy.c"
 
 #define INITIAL 0
 #define QUOTED 1
@@ -725,10 +724,10 @@ YY_DECL
 		}
 
 	{
-#line 51 "src/lex.l"
+#line 48 "src/lex.l"
 
 
-#line 731 "src/lex.yy.c"
+#line 730 "src/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -797,72 +796,70 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 53 "src/lex.l"
+#line 50 "src/lex.l"
 {   yylval.val = atof(yytext); return NUM; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 55 "src/lex.l"
+#line 52 "src/lex.l"
 {   BEGIN(QUOTED); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 57 "src/lex.l"
+#line 54 "src/lex.l"
 {   yylval.str = strdup(yytext); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 59 "src/lex.l"
+#line 56 "src/lex.l"
 {   BEGIN(INITIAL); return ARG; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 61 "src/lex.l"
+#line 58 "src/lex.l"
 {   yylval.str = strdup(yytext); return LW; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 63 "src/lex.l"
+#line 60 "src/lex.l"
 {   yylval.str = strdup(yytext); return UP; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 65 "src/lex.l"
+#line 62 "src/lex.l"
 {   return GET; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 67 "src/lex.l"
+#line 64 "src/lex.l"
 {   return LET; }                                
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 69 "src/lex.l"
+#line 66 "src/lex.l"
 {   return (int) yytext[0]; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 71 "src/lex.l"
+#line 68 "src/lex.l"
 {   }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 73 "src/lex.l"
-{   return '\n'; }
-	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(QUOTED):
-#line 75 "src/lex.l"
-{   yylval.str = strdup("QUIT"); return QUIT; }
+#line 70 "src/lex.l"
+{   }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 77 "src/lex.l"
+#line 72 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 865 "src/lex.yy.c"
+#line 859 "src/lex.yy.c"
+case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(QUOTED):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1836,10 +1833,9 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 77 "src/lex.l"
+#line 72 "src/lex.l"
 
 
 void init_lex_parsing(void){
     _init_input_system();
 }
-

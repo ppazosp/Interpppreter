@@ -19,34 +19,35 @@ extern void init_lex_parsing(void);
 #define STACK_SIZE 8
 
 Stack* fp_stack;
+FILE *current_fp;
 
 void _init_fp_stack(){
         fp_stack = stack_create(STACK_SIZE);
 }
 
-void load(const char* filename){
-        FILE *fp = fopen(filename, "r");
-        if (fp == NULL) {
-                char buffer[64];
-                snprintf(buffer, sizeof(buffer), "Could not open file %s", filename);
-                yyerror(buffer);
-        }
-
-        stack_push(fp_stack, yyin);
-        yyin = fp;
+void load(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        char buffer[64];
+        snprintf(buffer, sizeof(buffer), "Could not open file %s", filename);
+        yyerror(buffer);
+        return;
+    }
+    printf("Reading from new input...\n");
+    stack_push(fp_stack, current_fp);
+    current_fp = fp;
 }
 
-void quit(void){
-        if(stack_is_empty(fp_stack)) {
-                st_print();
-                st_free();
-        }
-        else {
-                yyin = stack_pop(fp_stack);
-                yyrestart(yyin);
-                printf("Quitting\n\n");
-                ungetc('\n', yyin);
-        }
+void quit(void) {
+    if (current_fp != NULL) {
+        fclose(current_fp);
+        current_fp = stack_pop(fp_stack);
+        printf("Returning to previous input...\n");
+    } else {
+        st_print();
+        st_free();
+        exit(EXIT_SUCCESS);
+    }
 }
 
 %}
@@ -75,16 +76,14 @@ char* str;
 
 %%
 
-input:  prompt
+input:  
         | input line ;
 
-line:   prompt '\n'
-        | prompt exp '\n' { if(show_value) { printf ("%.10g", $2); } printf("\n\n> "); fflush(stdout);}
-        | prompt error '\n' { yyclearin; yyerrok; printf("\n> "); } ;
-        | prompt exp ';' '\n' { }
-        | prompt QUIT { quit(); };
-
-prompt: { printf("> "); fflush(stdout); } ;
+line: 
+        exp { if(show_value) { printf ("%.10g", $1); } printf("\n\n"); fflush(stdout); }
+        | error { yyclearin; yyerrok; printf("\n\n"); }
+        | exp ';' { }
+        | QUIT { quit(); };
 
 exp:    NUM { $$ = $1; }
 
@@ -256,5 +255,4 @@ exp:    NUM { $$ = $1; }
 void init_syn_parsing(void){
     _init_fp_stack();
     init_lex_parsing();
-    yyparse();
 }
