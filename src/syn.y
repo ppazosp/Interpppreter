@@ -11,7 +11,8 @@
 #include "lex.yy.h"
 #include "token.h"
 
-extern void init_lex_parsing(void);
+extern void init_lex_parser(void);
+extern int yylex_destroy(void);
 extern int echo;
 
 int show_value = TRUE;
@@ -45,9 +46,9 @@ input:
         | input line ;
 
 line: 
-        exp { if(show_value && echo) { printf ("%.10g", $1); } printf("\n\n"); fflush(stdout); }
+        exp { if(show_value && echo) { printf ("* %.10g", $1); } printf("\n\n"); fflush(stdout); }
         | error { yyclearin; yyerrok; printf("\n\n"); }
-        | exp ';' { } ;
+        | exp ';' { printf("\n"); } ;
 
 exp:    NUM { $$ = $1; }
 
@@ -252,6 +253,6 @@ exp:    NUM { $$ = $1; }
 
 %%
 
-void init_syn_parsing(void){
-    init_lex_parsing();
+void syn_parser_free(void){
+    yylex_destroy();
 }

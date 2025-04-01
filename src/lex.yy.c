@@ -163,27 +163,8 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
     
-    /* Note: We specifically omit the test for yy_rule_can_match_eol because it requires
-     *       access to the local variable yy_act. Since yyless() is a macro, it would break
-     *       existing scanners that call yyless() from OUTSIDE yylex.
-     *       One obvious solution it to make yy_act a global. I tried that, and saw
-     *       a 5% performance hit in a non-yylineno scanner, because yy_act is
-     *       normally declared as a register variable-- so it is not worth it.
-     */
-    #define  YY_LESS_LINENO(n) \
-            do { \
-                int yyl;\
-                for ( yyl = n; yyl < yyleng; ++yyl )\
-                    if ( yytext[yyl] == '\n' )\
-                        --yylineno;\
-            }while(0)
-    #define YY_LINENO_REWIND_TO(dst) \
-            do {\
-                const char *p;\
-                for ( p = yy_cp-1; p >= (dst); --p)\
-                    if ( *p == '\n' )\
-                        --yylineno;\
-            }while(0)
+    #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -374,8 +355,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 12
-#define YY_END_OF_BUFFER 13
+#define YY_NUM_RULES 13
+#define YY_END_OF_BUFFER 14
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -385,7 +366,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[43] =
     {   0,
-        0,    0,    0,    0,   13,   12,   10,   11,    2,    9,
+        0,    0,    0,    0,   14,   12,   10,   11,    2,    9,
        12,    1,    9,    9,    6,    5,    3,    4,   10,    1,
         1,    1,    8,    0,    0,    6,    6,    0,    5,    5,
         3,    1,    7,    6,    6,    5,    5,    6,    6,    5,
@@ -399,7 +380,7 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    4,    1,    1,    1,    1,    5,    6,
         6,    6,    6,    1,    6,    7,    6,    8,    8,    8,
-        8,    8,    8,    8,    8,    8,    8,    1,    1,    9,
+        8,    8,    8,    8,    8,    8,    8,    1,    6,    9,
        10,   11,    1,    1,   12,   12,   12,   12,   12,   12,
        12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
        12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
@@ -470,11 +451,6 @@ static const flex_int16_t yy_chk[63] =
        42,   42
     } ;
 
-/* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[13] =
-    {   0,
-0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0,     };
-
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
 
@@ -501,14 +477,10 @@ char *yytext;
 
 #define STACK_SIZE 8
 
-void _init_input_system(void){
-    yylineno = 1;
-}
-
-#line 508 "src/lex.yy.c"
+#line 480 "src/lex.yy.c"
 #define YY_NO_INPUT 1
 
-#line 511 "src/lex.yy.c"
+#line 483 "src/lex.yy.c"
 
 #define INITIAL 0
 #define QUOTED 1
@@ -724,10 +696,10 @@ YY_DECL
 		}
 
 	{
-#line 48 "src/lex.l"
+#line 44 "src/lex.l"
 
 
-#line 730 "src/lex.yy.c"
+#line 702 "src/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -773,16 +745,6 @@ yy_find_action:
 
 		YY_DO_BEFORE_ACTION;
 
-		if ( yy_act != YY_END_OF_BUFFER && yy_rule_can_match_eol[yy_act] )
-			{
-			int yyl;
-			for ( yyl = 0; yyl < yyleng; ++yyl )
-				if ( yytext[yyl] == '\n' )
-					
-    yylineno++;
-;
-			}
-
 do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
@@ -796,67 +758,72 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 50 "src/lex.l"
+#line 46 "src/lex.l"
 {   yylval.val = atof(yytext); return NUM; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 52 "src/lex.l"
+#line 48 "src/lex.l"
 {   BEGIN(QUOTED); }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 54 "src/lex.l"
+#line 50 "src/lex.l"
 {   yylval.str = strdup(yytext); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 56 "src/lex.l"
+#line 52 "src/lex.l"
 {   BEGIN(INITIAL); return ARG; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 58 "src/lex.l"
+#line 54 "src/lex.l"
 {   yylval.str = strdup(yytext); return LW; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 60 "src/lex.l"
+#line 56 "src/lex.l"
 {   yylval.str = strdup(yytext); return UP; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 62 "src/lex.l"
+#line 58 "src/lex.l"
 {   return GET; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 64 "src/lex.l"
+#line 60 "src/lex.l"
 {   return LET; }                                
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 66 "src/lex.l"
+#line 62 "src/lex.l"
 {   return (int) yytext[0]; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 68 "src/lex.l"
+#line 64 "src/lex.l"
 {   }
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 70 "src/lex.l"
+#line 66 "src/lex.l"
 {   }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 72 "src/lex.l"
+#line 68 "src/lex.l"
+{   }
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 70 "src/lex.l"
 ECHO;
 	YY_BREAK
-#line 859 "src/lex.yy.c"
+#line 826 "src/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(QUOTED):
 	yyterminate();
@@ -1264,11 +1231,6 @@ static int yy_get_next_buffer (void)
 	c = *(unsigned char *) (yy_c_buf_p);	/* cast for 8-bit char's */
 	*(yy_c_buf_p) = '\0';	/* preserve yytext */
 	(yy_hold_char) = *++(yy_c_buf_p);
-
-	if ( c == '\n' )
-		
-    yylineno++;
-;
 
 	return c;
 }
@@ -1736,9 +1698,6 @@ static int yy_init_globals (void)
      * This function is called from yylex_destroy(), so don't allocate here.
      */
 
-    /* We do not touch yylineno unless the option is enabled. */
-    yylineno =  1;
-    
     (yy_buffer_stack) = NULL;
     (yy_buffer_stack_top) = 0;
     (yy_buffer_stack_max) = 0;
@@ -1833,9 +1792,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 72 "src/lex.l"
+#line 70 "src/lex.l"
 
-
-void init_lex_parsing(void){
-    _init_input_system();
-}

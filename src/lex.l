@@ -9,13 +9,9 @@
 
 #define STACK_SIZE 8
 
-void _init_input_system(void){
-    yylineno = 1;
-}
-
 %}
 
-%option noyywrap nounput noinput yylineno
+%option noyywrap nounput noinput
 
 %x QUOTED
 
@@ -37,7 +33,7 @@ ALPHA ({LOWER}|{UPPER})+
 CONSTANT {UPPER}({NUMERIC_LITERAL}|{UPPER})*
 IDENTIFIER {LOWER}({NUMERIC_LITERAL}|{LOWER})* 
 
-SYMBOL [+\-*/()^<>=]
+SYMBOL [+\-*/()^<>=;]
 
 GET_SYMBOL ">='"
 
@@ -69,8 +65,6 @@ QUOTE \"
 
 \n                              {   }
 
-%%
+.                               {   }
 
-void init_lex_parsing(void){
-    _init_input_system();
-}
+%%

@@ -13,7 +13,7 @@
 #include "stack.h"
 
 extern int yyparse(void);
-extern void init_syn_parsing(void);
+extern void syn_parser_free(void);
 
 
 
@@ -175,7 +175,7 @@ Token** create_keywords(void) {
 }
 
 char *get_next_line(void) {
-    char *line = NULL;
+    char *line;
 
     if (current_fp != NULL) {
 
@@ -203,7 +203,6 @@ void repl_loop(void) {
             add_history(line);
         }
 
-        //printf("%s\n", line);
 
         YY_BUFFER_STATE bp = yy_scan_string(line);
         yyparse();
@@ -211,6 +210,13 @@ void repl_loop(void) {
 
         free(line);
     }
+}
+
+void free_all(){
+    fncts_free();
+    syn_parser_free();
+    st_free();
+    clear_history();
 }
 
 int main(void){
@@ -222,15 +228,13 @@ int main(void){
     
     st_print();
 
-    init_functions();
-
-    init_syn_parsing();
+    init_fncts();
 
     repl_loop();
 
     st_print();
 
-    st_free();
+    free_all();
 
     return EXIT_SUCCESS;
 }

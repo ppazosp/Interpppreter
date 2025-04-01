@@ -8,59 +8,47 @@
 #include "constants.h"
 #include "error_handler.h"
 #include "stack.h"
+#include "dll.c"
 
 #define STACK_SIZE 8
 
 Stack *stack;
 
-typedef struct Library {
-    char *name;         
-    void *handle;      
-    struct Library *next;
-} Library;
-
-Library *libs = NULL;
+Dll *libs;
 
 int echo = TRUE;
 
-void init_functions(){
+extern void free_all();
+
+void init_fncts(){
     stack = stack_create(STACK_SIZE);
+    libs = dll_create();
+}
+
+void fncts_free(){
+    dll_free(libs);
+    stack_destroy(stack);
+}
+
+void* find_symbol(const char *sym){
+    return dll_find_symbol(libs, sym);
 }
 
 void IMPORT(const char* libname){
-    for (Library *lib = libs; lib != NULL; lib = lib->next) {
-        if (strcmp(lib->name, libname) == 0) return;
+    if(dll_contains(libs, libname)) {
+        printf("%s is already imported", libname);
+         return;
     }
-
+ 
     void *handle = dlopen(libname, RTLD_LAZY);
     if (!handle) {
         yyerror(dlerror());
         return;
     }
 
-    Library *new_lib = malloc(sizeof(Library));
-    new_lib->name = strdup(libname);
-    new_lib->handle = handle;
-    new_lib->next = libs;
-    libs = new_lib;
+    dll_add(&libs, libname, handle);
 
-    printf("Imported %s correctly", libname);
-}
-
-void *find_symbol(const char *func) {
-    for (Library *lib = libs; lib != NULL; lib = lib->next) {
-        void *f = dlsym(lib->handle, func);
-        if (f) return f;
-    }
-    return NULL;
-}
-
-void print_libs() {
-    Library *lib = libs;
-    while(lib != NULL){
-        printf("| %-21s |\n", lib->name);
-        lib = lib->next;
-    }
+    printf("Imported %s correctly", libs->name);
 }
 
 void LOAD(const char* filename){
@@ -83,19 +71,13 @@ void QUIT(const char* unused){
         printf("Returning to previous input...\n\n\n");
     } else {
         st_print();
-        st_free();
+        free_all();
         exit(EXIT_SUCCESS);
     }
 }
 
 void HELP(const char* unused){
     printf("HELP");
-}
-
-void _print_workspace(void){
-    st_print_items(IDENTIFIER);
-    st_print_items(CONSTANT);
-    print_libs();
 }
 
 void WORKSPACE(const char* unused){
@@ -105,7 +87,7 @@ void WORKSPACE(const char* unused){
     printf(  "- Constants ---------------\n");
     st_print_items(CONSTANT);
     printf(  "- Libraries ---------------\n");
-    print_libs();
+    dll_print(libs);
     printf(  "===========================");
 }
 
@@ -123,7 +105,7 @@ void CLEAN(const char* unused){
 }
 
 void ECHO(const char* val){
-    if (strcmp(val, "ON")) echo = TRUE;
-    else if (strcmp(val, "OFF")) echo = FALSE;
+    if ((strcmp(val, "ON")) == 0) echo = TRUE;
+    else if ((strcmp(val, "OFF")) == 0) echo = FALSE;
     else echo = !echo;
 }

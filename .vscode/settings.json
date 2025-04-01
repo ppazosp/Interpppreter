@@ -10,6 +10,7 @@
         "limits": "c",
         "ratio": "c",
         "tuple": "c",
-        "vector": "c"
+        "vector": "c",
+        "typeinfo": "cpp"
     }
 }

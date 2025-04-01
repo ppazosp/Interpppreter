@@ -4,7 +4,9 @@
 
 FILE *current_fp;
 
-void init_functions();
+void init_fncts();
+
+void fncts_free();
 
 void IMPORT(const char* libname);
 
