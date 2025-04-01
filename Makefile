@@ -2,7 +2,7 @@ CC = gcc
 
 CFLAGS = -Wall -Iinclude -I/opt/homebrew/opt/readline/include
 LDFLAGS = -L/opt/homebrew/opt/readline/lib
-LDLIBS = -lm -lncurses -lreadline
+LDLIBS = -lm -lncurses -lreadline -ldl
 
 FLEX = flex
 BISON = bison

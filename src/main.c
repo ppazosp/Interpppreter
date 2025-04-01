@@ -216,7 +216,9 @@ void free_all(){
     fncts_free();
     syn_parser_free();
     st_free();
-    clear_history();
+    clear_history();        
+    rl_deprep_terminal();    
+    rl_cleanup_after_signal();
 }
 
 int main(void){
@@ -231,10 +233,6 @@ int main(void){
     init_fncts();
 
     repl_loop();
-
-    st_print();
-
-    free_all();
 
     return EXIT_SUCCESS;
 }

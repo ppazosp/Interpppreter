@@ -66,7 +66,6 @@ void LOAD(const char* filename){
 
 void QUIT(const char* unused){
     if (current_fp != NULL) {
-        fclose(current_fp);
         current_fp = stack_pop(stack);
         printf("Returning to previous input...\n\n\n");
     } else {
