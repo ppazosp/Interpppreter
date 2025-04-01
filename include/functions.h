@@ -1,18 +1,23 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-void LOAD(char* unused);
 
-void QUIT(char* unused);
+FILE *current_fp;
 
-void HELP(char* unused);
+void init_functions();
 
-void WORKSPACE(char* unused);
+void LOAD(const char* unused);
 
-void CLEAR(char* unused);
+void QUIT(const char* unused);
 
-void CLEAN(char* unused);
+void HELP(const char* unused);
 
-void ECHO(char* unused);
+void WORKSPACE(const char* unused);
+
+void CLEAR(const char* unused);
+
+void CLEAN(const char* unused);
+
+void ECHO(const char* unused);
 
 #endif // FUNCTIONS_H

@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "history.h": "c",
-        "symbol_table.h": "c"
+        "symbol_table.h": "c",
+        "stack.h": "c",
+        "constants.h": "c"
     }
 }

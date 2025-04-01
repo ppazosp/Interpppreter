@@ -69,20 +69,20 @@ void st_clean_vars(void){
 }
 
 void st_print_workspace(void) {
-    printf("\n\n\n============= WORKSPACE ===================================\n\n");
+    printf("\n============= WORKSPACE ===================================\n\n");
 
     for (size_t i = 0; i < st->ht->size; i++) {
         Ht_item* item = st->ht->items[i];
         while (item) {
             Token* token = item->token;
-            if (token->id == IDENTIFIER) {
+            if (token->id == IDENTIFIER || token->id == CONSTANT) {
                 printf("Name: %-20s  ID: %-3d  Value: %.2lf\n",
                        token->key, token->id, token->value.var);
             }
             item = item->next;
         }
     }
-    printf("\n\n===========================================================\n\n");
+    printf("\n===========================================================");
 }
 
 void st_clean_consts(void){

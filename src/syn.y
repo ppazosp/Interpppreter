@@ -7,48 +7,13 @@
 #include "symbol_table.h"
 #include "error_handler.h"
 #include "constants.h"
-#include "stack.h"
+#include "functions.h"
+#include "lex.yy.h"
+
+extern void init_lex_parsing(void);
+extern int echo;
 
 int show_value = TRUE;
-
-extern int yylex(void);
-extern void yyrestart(FILE *input_file);
-extern FILE *yyin;
-extern void init_lex_parsing(void);
-
-#define STACK_SIZE 8
-
-Stack* fp_stack;
-FILE *current_fp;
-
-void _init_fp_stack(){
-        fp_stack = stack_create(STACK_SIZE);
-}
-
-void load(const char *filename) {
-    FILE *fp = fopen(filename, "r");
-    if (fp == NULL) {
-        char buffer[64];
-        snprintf(buffer, sizeof(buffer), "Could not open file %s", filename);
-        yyerror(buffer);
-        return;
-    }
-    printf("Reading from new input...\n");
-    stack_push(fp_stack, current_fp);
-    current_fp = fp;
-}
-
-void quit(void) {
-    if (current_fp != NULL) {
-        fclose(current_fp);
-        current_fp = stack_pop(fp_stack);
-        printf("Returning to previous input...\n");
-    } else {
-        st_print();
-        st_free();
-        exit(EXIT_SUCCESS);
-    }
-}
 
 %}
 
@@ -60,7 +25,6 @@ char* str;
 }
 
 %token GET LET
-%token QUIT
 
 %token <val> NUM
 %token <str> UP LW ARG
@@ -80,10 +44,9 @@ input:
         | input line ;
 
 line: 
-        exp { if(show_value) { printf ("%.10g", $1); } printf("\n\n"); fflush(stdout); }
+        exp { if(show_value && echo) { printf ("%.10g", $1); } printf("\n\n"); fflush(stdout); }
         | error { yyclearin; yyerrok; printf("\n\n"); }
-        | exp ';' { }
-        | QUIT { quit(); };
+        | exp ';' { } ;
 
 exp:    NUM { $$ = $1; }
 
@@ -122,14 +85,35 @@ exp:    NUM { $$ = $1; }
                         } else if (token->id == COMMAND) {
                                 $$ = -1;
 
-                                if(strcmp(token->key, "QUIT") == 0){ quit(); }
-                                else if(strcmp(token->key, "LOAD") == 0){
+                                if(strcmp(token->key, "LOAD") == 0){
                                         char buffer[64];
                                         snprintf(buffer, sizeof(buffer), "Arguments missing for function %s", $1);
                                         yyerror(buffer);
                                 }
-                                else (*(token->value.cmdptr))(NULL);
+                                else (*(token->value.cmdptr))("unused");
                                 show_value = FALSE;  
+                        }
+                } else {
+                        $$ = -1;
+                        char buffer[64];
+                        snprintf(buffer, sizeof(buffer), "%s is not defined", $1);
+                        yyerror(buffer);
+
+                        show_value = FALSE;
+                }
+        }
+
+        | LW '(' exp ')' { 
+                Token* token = st_search($1);
+                if (token != NULL){
+                        if (token->id == IDENTIFIER) {
+                                $$ = token->value.var;
+
+                                show_value = TRUE; 
+                        } else if (token->id == FUNCTION) {
+                                $$ = (*(token->value.fnctptr))($3);
+
+                                show_value = TRUE;  
                         }
                 } else {
                         $$ = -1;
@@ -151,9 +135,7 @@ exp:    NUM { $$ = $1; }
                         } else if (token->id == COMMAND) {
                                 $$ = -1;
 
-                                if(strcmp(token->key, "LOAD") == 0) load($3);
-                                else if(strcmp(token->key, "QUIT") == 0) quit();
-                                else(*(token->value.cmdptr))(NULL);
+                                (*(token->value.cmdptr))($3);
 
                                 show_value = FALSE;  
                         }
@@ -253,6 +235,5 @@ exp:    NUM { $$ = $1; }
 %%
 
 void init_syn_parsing(void){
-    _init_fp_stack();
     init_lex_parsing();
 }

@@ -15,9 +15,7 @@
 extern int yyparse(void);
 extern void init_syn_parsing(void);
 
-extern FILE *current_fp;
-extern Stack *fp_stack;
-extern void quit(void);
+
 
 #define KEYWORDS_COUNT 15
 
@@ -174,10 +172,9 @@ char *get_next_line(void) {
 
         char buffer[64];
         if (fgets(buffer, sizeof(buffer), current_fp)) {
-
             line = strdup(buffer);
         } else {
-            quit();
+            QUIT("unused");
             
             line = strdup("\n");
         }
@@ -192,14 +189,12 @@ void repl_loop(void) {
 
     while (1) {
         char *line = get_next_line();
-        if (!line) {
-            printf("\n");
-            break;
-        }
 
         if (current_fp == NULL && *line != '\0') {
             add_history(line);
         }
+
+        //printf("%s\n", line);
 
         YY_BUFFER_STATE bp = yy_scan_string(line);
         yyparse();
@@ -217,6 +212,8 @@ int main(void){
     }
     
     st_print();
+
+    init_functions();
 
     init_syn_parsing();
 

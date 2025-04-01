@@ -2,7 +2,7 @@
 #define TOKEN_H
 
 typedef double (*fnctptr_t)(double);
-typedef void (*cmdptr_t)(char*);
+typedef void (*cmdptr_t)(const char*);
 
 typedef union Value{
     double var;
