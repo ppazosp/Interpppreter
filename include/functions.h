@@ -6,6 +6,10 @@ FILE *current_fp;
 
 void init_functions();
 
+void IMPORT(const char* libname);
+
+void *find_symbol(const char *sym);
+
 void LOAD(const char* unused);
 
 void QUIT(const char* unused);

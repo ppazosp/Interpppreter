@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "lex.yy.h"
+#include "token.h"
 
 extern void init_lex_parsing(void);
 extern int echo;
@@ -116,12 +117,29 @@ exp:    NUM { $$ = $1; }
                                 show_value = TRUE;  
                         }
                 } else {
-                        $$ = -1;
-                        char buffer[64];
-                        snprintf(buffer, sizeof(buffer), "%s is not defined", $1);
-                        yyerror(buffer);
+                        fnctptr_t fptr = (double (*)(double)) find_symbol($1);
 
-                        show_value = FALSE;
+                        if (fptr != NULL) {
+                                Token* token = malloc(sizeof(Token));
+                                if (!token) {
+                                        eh_printerr("Memory allocation error\n", FATAL_ERROR, 0);
+                                        exit(EXIT_FAILURE);
+                                }
+                                token->key = strdup($1);
+                                token->id = FUNCTION;
+                                token->value.fnctptr = fptr;
+                                st_insert(token);
+
+                                $$ = fptr($3);
+                                show_value = TRUE;
+                        } else {
+                                $$ = -1;
+                                char buffer[64];
+                                snprintf(buffer, sizeof(buffer), "%s is not defined", $1);
+                                yyerror(buffer);
+
+                                show_value = FALSE;
+                        }
                 }
         }
 

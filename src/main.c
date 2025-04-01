@@ -17,7 +17,7 @@ extern void init_syn_parsing(void);
 
 
 
-#define KEYWORDS_COUNT 15
+#define KEYWORDS_COUNT 16
 
 Token** create_keywords(void) {
     static Token* keywords[KEYWORDS_COUNT] = { NULL };
@@ -161,6 +161,15 @@ Token** create_keywords(void) {
         keywords[14]->key = strdup("ECHO");
         keywords[14]->id = COMMAND;
         keywords[14]->value.cmdptr = ECHO;
+
+        keywords[15] = malloc(sizeof(Token));
+        if (!keywords[15]) {
+            eh_printerr("Memory allocation error\n", FATAL_ERROR, 0);
+            exit(EXIT_FAILURE);
+        }
+        keywords[15]->key = strdup("IMPORT");
+        keywords[15]->id = COMMAND;
+        keywords[15]->value.cmdptr = IMPORT;
     }
     return keywords;
 }

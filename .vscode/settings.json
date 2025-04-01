@@ -3,6 +3,13 @@
         "history.h": "c",
         "symbol_table.h": "c",
         "stack.h": "c",
-        "constants.h": "c"
+        "constants.h": "c",
+        "__bit_reference": "c",
+        "bitset": "c",
+        "deque": "c",
+        "limits": "c",
+        "ratio": "c",
+        "tuple": "c",
+        "vector": "c"
     }
 }

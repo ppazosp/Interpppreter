@@ -69,7 +69,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 22 "src/syn.y"
+#line 23 "src/syn.y"
 
 double val;
 char* str;

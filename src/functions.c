@@ -19,6 +19,8 @@ typedef struct Library {
     struct Library *next;
 } Library;
 
+Library *libs = NULL;
+
 int echo = TRUE;
 
 void init_functions(){
@@ -26,13 +28,38 @@ void init_functions(){
 }
 
 void IMPORT(const char* libname){
-    void *handle;
-    handle = dlopen(libname, RTLD_LAZY); 
+    for (Library *lib = libs; lib != NULL; lib = lib->next) {
+        if (strcmp(lib->name, libname) == 0) return;
+    }
+
+    void *handle = dlopen(libname, RTLD_LAZY);
     if (!handle) {
-        char buffer[64];
-        snprintf(buffer, sizeof(buffer), "Could not open lib %s", libname);
-        yyerror(buffer);
+        yyerror(dlerror());
         return;
+    }
+
+    Library *new_lib = malloc(sizeof(Library));
+    new_lib->name = strdup(libname);
+    new_lib->handle = handle;
+    new_lib->next = libs;
+    libs = new_lib;
+
+    printf("Imported %s correctly", libname);
+}
+
+void *find_symbol(const char *func) {
+    for (Library *lib = libs; lib != NULL; lib = lib->next) {
+        void *f = dlsym(lib->handle, func);
+        if (f) return f;
+    }
+    return NULL;
+}
+
+void print_libs() {
+    Library *lib = libs;
+    while(lib != NULL){
+        printf("| %-21s |\n", lib->name);
+        lib = lib->next;
     }
 }
 
@@ -65,8 +92,21 @@ void HELP(const char* unused){
     printf("HELP");
 }
 
+void _print_workspace(void){
+    st_print_items(IDENTIFIER);
+    st_print_items(CONSTANT);
+    print_libs();
+}
+
 void WORKSPACE(const char* unused){
-    st_print_workspace();
+    printf("\n======== WORKSPACE ========\n");
+    printf(  "- Variables ---------------\n");
+    st_print_items(IDENTIFIER);
+    printf(  "- Constants ---------------\n");
+    st_print_items(CONSTANT);
+    printf(  "- Libraries ---------------\n");
+    print_libs();
+    printf(  "===========================");
 }
 
 void CLEAR(const char* unused){

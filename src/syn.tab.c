@@ -79,6 +79,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "lex.yy.h"
+#include "token.h"
 
 extern void init_lex_parsing(void);
 extern int echo;
@@ -86,7 +87,7 @@ extern int echo;
 int show_value = TRUE;
 
 
-#line 90 "src/syn.tab.c"
+#line 91 "src/syn.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -525,9 +526,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    43,    43,    44,    47,    48,    49,    51,    53,    78,
-     106,   128,   152,   186,   223,   224,   225,   226,   227,   228,
-     229,   230,   231,   232,   233
+       0,    44,    44,    45,    48,    49,    50,    52,    54,    79,
+     107,   146,   170,   204,   241,   242,   243,   244,   245,   246,
+     247,   248,   249,   250,   251
 };
 #endif
 
@@ -1393,31 +1394,31 @@ yyreduce:
   switch (yyn)
     {
   case 4: /* line: exp  */
-#line 47 "src/syn.y"
+#line 48 "src/syn.y"
             { if(show_value && echo) { printf ("%.10g", (yyvsp[0].val)); } printf("\n\n"); fflush(stdout); }
-#line 1399 "src/syn.tab.c"
+#line 1400 "src/syn.tab.c"
     break;
 
   case 5: /* line: error  */
-#line 48 "src/syn.y"
+#line 49 "src/syn.y"
                 { yyclearin; yyerrok; printf("\n\n"); }
-#line 1405 "src/syn.tab.c"
+#line 1406 "src/syn.tab.c"
     break;
 
   case 6: /* line: exp ';'  */
-#line 49 "src/syn.y"
+#line 50 "src/syn.y"
                   { }
-#line 1411 "src/syn.tab.c"
+#line 1412 "src/syn.tab.c"
     break;
 
   case 7: /* exp: NUM  */
-#line 51 "src/syn.y"
+#line 52 "src/syn.y"
             { (yyval.val) = (yyvsp[0].val); }
-#line 1417 "src/syn.tab.c"
+#line 1418 "src/syn.tab.c"
     break;
 
   case 8: /* exp: LW  */
-#line 53 "src/syn.y"
+#line 54 "src/syn.y"
              { 
                 Token* token = st_search((yyvsp[0].str));
                 if (token != NULL){
@@ -1442,11 +1443,11 @@ yyreduce:
                         show_value = FALSE;
                 }
         }
-#line 1446 "src/syn.tab.c"
+#line 1447 "src/syn.tab.c"
     break;
 
   case 9: /* exp: UP  */
-#line 78 "src/syn.y"
+#line 79 "src/syn.y"
              { 
                 Token* token = st_search((yyvsp[0].str));
                 if (token != NULL){
@@ -1474,11 +1475,11 @@ yyreduce:
                         show_value = FALSE;
                 }
         }
-#line 1478 "src/syn.tab.c"
+#line 1479 "src/syn.tab.c"
     break;
 
   case 10: /* exp: LW '(' exp ')'  */
-#line 106 "src/syn.y"
+#line 107 "src/syn.y"
                          { 
                 Token* token = st_search((yyvsp[-3].str));
                 if (token != NULL){
@@ -1492,19 +1493,36 @@ yyreduce:
                                 show_value = TRUE;  
                         }
                 } else {
-                        (yyval.val) = -1;
-                        char buffer[64];
-                        snprintf(buffer, sizeof(buffer), "%s is not defined", (yyvsp[-3].str));
-                        yyerror(buffer);
+                        fnctptr_t fptr = (double (*)(double)) find_symbol((yyvsp[-3].str));
 
-                        show_value = FALSE;
+                        if (fptr != NULL) {
+                                Token* token = malloc(sizeof(Token));
+                                if (!token) {
+                                        eh_printerr("Memory allocation error\n", FATAL_ERROR, 0);
+                                        exit(EXIT_FAILURE);
+                                }
+                                token->key = strdup((yyvsp[-3].str));
+                                token->id = FUNCTION;
+                                token->value.fnctptr = fptr;
+                                st_insert(token);
+
+                                (yyval.val) = fptr((yyvsp[-1].val));
+                                show_value = TRUE;
+                        } else {
+                                (yyval.val) = -1;
+                                char buffer[64];
+                                snprintf(buffer, sizeof(buffer), "%s is not defined", (yyvsp[-3].str));
+                                yyerror(buffer);
+
+                                show_value = FALSE;
+                        }
                 }
         }
-#line 1504 "src/syn.tab.c"
+#line 1522 "src/syn.tab.c"
     break;
 
   case 11: /* exp: UP '(' ARG ')'  */
-#line 128 "src/syn.y"
+#line 146 "src/syn.y"
                          { 
                 Token* token = st_search((yyvsp[-3].str));
                 if (token != NULL){
@@ -1528,11 +1546,11 @@ yyreduce:
                         show_value = FALSE;
                 }
         }
-#line 1532 "src/syn.tab.c"
+#line 1550 "src/syn.tab.c"
     break;
 
   case 12: /* exp: LW '=' exp  */
-#line 152 "src/syn.y"
+#line 170 "src/syn.y"
                      {
                 Token* token = st_search((yyvsp[-2].str));
                 if (token != NULL){
@@ -1566,11 +1584,11 @@ yyreduce:
                         show_value = TRUE;
                 }
         }
-#line 1570 "src/syn.tab.c"
+#line 1588 "src/syn.tab.c"
     break;
 
   case 13: /* exp: UP '=' exp  */
-#line 186 "src/syn.y"
+#line 204 "src/syn.y"
                      {
                 Token* token = st_search((yyvsp[-2].str));
                 if (token != NULL){
@@ -1607,77 +1625,77 @@ yyreduce:
                         show_value = TRUE;
                 }
         }
-#line 1611 "src/syn.tab.c"
-    break;
-
-  case 14: /* exp: exp '+' exp  */
-#line 223 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); show_value = TRUE; }
-#line 1617 "src/syn.tab.c"
-    break;
-
-  case 15: /* exp: exp '-' exp  */
-#line 224 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); show_value = TRUE; }
-#line 1623 "src/syn.tab.c"
-    break;
-
-  case 16: /* exp: exp '*' exp  */
-#line 225 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); show_value = TRUE; }
 #line 1629 "src/syn.tab.c"
     break;
 
-  case 17: /* exp: exp '/' exp  */
-#line 226 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); show_value = TRUE; }
+  case 14: /* exp: exp '+' exp  */
+#line 241 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); show_value = TRUE; }
 #line 1635 "src/syn.tab.c"
     break;
 
-  case 18: /* exp: exp '<' exp  */
-#line 227 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) < (yyvsp[0].val); show_value = TRUE; }
+  case 15: /* exp: exp '-' exp  */
+#line 242 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); show_value = TRUE; }
 #line 1641 "src/syn.tab.c"
     break;
 
-  case 19: /* exp: exp '>' exp  */
-#line 228 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) > (yyvsp[0].val); show_value = TRUE; }
+  case 16: /* exp: exp '*' exp  */
+#line 243 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); show_value = TRUE; }
 #line 1647 "src/syn.tab.c"
     break;
 
-  case 20: /* exp: exp GET exp  */
-#line 229 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) >= (yyvsp[0].val); show_value = TRUE; }
+  case 17: /* exp: exp '/' exp  */
+#line 244 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); show_value = TRUE; }
 #line 1653 "src/syn.tab.c"
     break;
 
-  case 21: /* exp: exp LET exp  */
-#line 230 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-2].val) <= (yyvsp[0].val); show_value = TRUE; }
+  case 18: /* exp: exp '<' exp  */
+#line 245 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) < (yyvsp[0].val); show_value = TRUE; }
 #line 1659 "src/syn.tab.c"
     break;
 
-  case 22: /* exp: '-' exp  */
-#line 231 "src/syn.y"
-                            { (yyval.val) = -(yyvsp[0].val); show_value = TRUE; }
+  case 19: /* exp: exp '>' exp  */
+#line 246 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) > (yyvsp[0].val); show_value = TRUE; }
 #line 1665 "src/syn.tab.c"
     break;
 
-  case 23: /* exp: exp '^' exp  */
-#line 232 "src/syn.y"
-                      { (yyval.val) = pow ((yyvsp[-2].val), (yyvsp[0].val)); show_value = TRUE; }
+  case 20: /* exp: exp GET exp  */
+#line 247 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) >= (yyvsp[0].val); show_value = TRUE; }
 #line 1671 "src/syn.tab.c"
     break;
 
-  case 24: /* exp: '(' exp ')'  */
-#line 233 "src/syn.y"
-                      { (yyval.val) = (yyvsp[-1].val); show_value = TRUE; }
+  case 21: /* exp: exp LET exp  */
+#line 248 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-2].val) <= (yyvsp[0].val); show_value = TRUE; }
 #line 1677 "src/syn.tab.c"
     break;
 
+  case 22: /* exp: '-' exp  */
+#line 249 "src/syn.y"
+                            { (yyval.val) = -(yyvsp[0].val); show_value = TRUE; }
+#line 1683 "src/syn.tab.c"
+    break;
 
-#line 1681 "src/syn.tab.c"
+  case 23: /* exp: exp '^' exp  */
+#line 250 "src/syn.y"
+                      { (yyval.val) = pow ((yyvsp[-2].val), (yyvsp[0].val)); show_value = TRUE; }
+#line 1689 "src/syn.tab.c"
+    break;
+
+  case 24: /* exp: '(' exp ')'  */
+#line 251 "src/syn.y"
+                      { (yyval.val) = (yyvsp[-1].val); show_value = TRUE; }
+#line 1695 "src/syn.tab.c"
+    break;
+
+
+#line 1699 "src/syn.tab.c"
 
       default: break;
     }
@@ -1901,7 +1919,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 235 "src/syn.y"
+#line 253 "src/syn.y"
 
 
 void init_syn_parsing(void){
