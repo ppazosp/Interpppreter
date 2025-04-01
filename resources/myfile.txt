@@ -1,4 +1,4 @@
 3+3
 a = 5
-LOAD("myfile2.txt")
+LOAD("resources/myfile2.txt")
 b = 7

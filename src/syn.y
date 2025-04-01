@@ -26,6 +26,8 @@ double val;
 char* str;
 }
 
+%destructor { free($$); } <str>
+
 %token GET LET
 
 %token <val> NUM
@@ -40,15 +42,17 @@ char* str;
 %left NEG 
 %right '^' 
 
+%expect 3
+
 %%
 
 input:  
         | input line ;
 
 line: 
-        exp { if(show_value && echo) { printf ("* %.10g", $1); } printf("\n\n"); fflush(stdout); }
-        | error { yyclearin; yyerrok; printf("\n\n"); }
-        | exp ';' { printf("\n"); } ;
+        exp ';' { printf("\n"); } ;
+        | exp { if(show_value && echo) { printf ("* %.10g", $1); } printf("\n\n"); fflush(stdout); }
+        | error { yyclearin; yyerrok; printf("\n\n"); } ;
 
 exp:    NUM { $$ = $1; }
 
@@ -105,6 +109,16 @@ exp:    NUM { $$ = $1; }
 
                         show_value = FALSE;
                 }
+
+                free($1);
+        }
+
+        | ARG {
+                $$ = -1;
+
+                printf("%s", $1);
+
+                show_value = FALSE;
 
                 free($1);
         }

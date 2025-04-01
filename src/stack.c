@@ -36,9 +36,7 @@ FILE* stack_pop(Stack *stack) {
     if (stack->top == 0) {
         return NULL; 
     }
-    FILE *fp = stack->items[stack->top];
-    if(fp) fclose(fp);
-    
+
     return stack->items[--stack->top];
 }
 

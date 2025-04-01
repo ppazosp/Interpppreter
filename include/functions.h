@@ -2,7 +2,7 @@
 #define FUNCTIONS_H
 
 
-FILE *current_fp;
+extern FILE* current_fp;
 
 void init_fncts();
 
