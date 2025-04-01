@@ -525,11 +525,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    45,    45,    46,    49,    50,    51,    53,    55,    80,
-     108,   147,   171,   205,   242,   243,   244,   245,   246,   247,
-     248,   249,   250,   251,   252
+       0,    45,    45,    46,    49,    50,    51,    53,    55,    82,
+     112,   153,   180,   216,   255,   256,   257,   258,   259,   260,
+     261,   262,   263,   264,   265
 };
 #endif
 
@@ -1443,12 +1443,14 @@ yyreduce:
 
                         show_value = FALSE;
                 }
+
+                free((yyvsp[0].str));
         }
-#line 1448 "src/syn.tab.c"
+#line 1450 "src/syn.tab.c"
     break;
 
   case 9: /* exp: UP  */
-#line 80 "src/syn.y"
+#line 82 "src/syn.y"
              { 
                 Token* token = st_search((yyvsp[0].str));
                 if (token != NULL){
@@ -1475,12 +1477,14 @@ yyreduce:
 
                         show_value = FALSE;
                 }
+
+                free((yyvsp[0].str));
         }
-#line 1480 "src/syn.tab.c"
+#line 1484 "src/syn.tab.c"
     break;
 
   case 10: /* exp: LW '(' exp ')'  */
-#line 108 "src/syn.y"
+#line 112 "src/syn.y"
                          { 
                 Token* token = st_search((yyvsp[-3].str));
                 if (token != NULL){
@@ -1518,12 +1522,14 @@ yyreduce:
                                 show_value = FALSE;
                         }
                 }
+
+                free((yyvsp[-3].str));
         }
-#line 1523 "src/syn.tab.c"
+#line 1529 "src/syn.tab.c"
     break;
 
   case 11: /* exp: UP '(' ARG ')'  */
-#line 147 "src/syn.y"
+#line 153 "src/syn.y"
                          { 
                 Token* token = st_search((yyvsp[-3].str));
                 if (token != NULL){
@@ -1546,12 +1552,15 @@ yyreduce:
 
                         show_value = FALSE;
                 }
+
+                free((yyvsp[-3].str));
+                free((yyvsp[-1].str));
         }
-#line 1551 "src/syn.tab.c"
+#line 1560 "src/syn.tab.c"
     break;
 
   case 12: /* exp: LW '=' exp  */
-#line 171 "src/syn.y"
+#line 180 "src/syn.y"
                      {
                 Token* token = st_search((yyvsp[-2].str));
                 if (token != NULL){
@@ -1584,12 +1593,14 @@ yyreduce:
 
                         show_value = TRUE;
                 }
+
+                free((yyvsp[-2].str));
         }
-#line 1589 "src/syn.tab.c"
+#line 1600 "src/syn.tab.c"
     break;
 
   case 13: /* exp: UP '=' exp  */
-#line 205 "src/syn.y"
+#line 216 "src/syn.y"
                      {
                 Token* token = st_search((yyvsp[-2].str));
                 if (token != NULL){
@@ -1625,78 +1636,80 @@ yyreduce:
 
                         show_value = TRUE;
                 }
+
+                free((yyvsp[-2].str));
         }
-#line 1630 "src/syn.tab.c"
+#line 1643 "src/syn.tab.c"
     break;
 
   case 14: /* exp: exp '+' exp  */
-#line 242 "src/syn.y"
+#line 255 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) + (yyvsp[0].val); show_value = TRUE; }
-#line 1636 "src/syn.tab.c"
+#line 1649 "src/syn.tab.c"
     break;
 
   case 15: /* exp: exp '-' exp  */
-#line 243 "src/syn.y"
+#line 256 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) - (yyvsp[0].val); show_value = TRUE; }
-#line 1642 "src/syn.tab.c"
+#line 1655 "src/syn.tab.c"
     break;
 
   case 16: /* exp: exp '*' exp  */
-#line 244 "src/syn.y"
+#line 257 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) * (yyvsp[0].val); show_value = TRUE; }
-#line 1648 "src/syn.tab.c"
+#line 1661 "src/syn.tab.c"
     break;
 
   case 17: /* exp: exp '/' exp  */
-#line 245 "src/syn.y"
+#line 258 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) / (yyvsp[0].val); show_value = TRUE; }
-#line 1654 "src/syn.tab.c"
+#line 1667 "src/syn.tab.c"
     break;
 
   case 18: /* exp: exp '<' exp  */
-#line 246 "src/syn.y"
+#line 259 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) < (yyvsp[0].val); show_value = TRUE; }
-#line 1660 "src/syn.tab.c"
+#line 1673 "src/syn.tab.c"
     break;
 
   case 19: /* exp: exp '>' exp  */
-#line 247 "src/syn.y"
+#line 260 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) > (yyvsp[0].val); show_value = TRUE; }
-#line 1666 "src/syn.tab.c"
+#line 1679 "src/syn.tab.c"
     break;
 
   case 20: /* exp: exp GET exp  */
-#line 248 "src/syn.y"
+#line 261 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) >= (yyvsp[0].val); show_value = TRUE; }
-#line 1672 "src/syn.tab.c"
+#line 1685 "src/syn.tab.c"
     break;
 
   case 21: /* exp: exp LET exp  */
-#line 249 "src/syn.y"
+#line 262 "src/syn.y"
                       { (yyval.val) = (yyvsp[-2].val) <= (yyvsp[0].val); show_value = TRUE; }
-#line 1678 "src/syn.tab.c"
+#line 1691 "src/syn.tab.c"
     break;
 
   case 22: /* exp: '-' exp  */
-#line 250 "src/syn.y"
+#line 263 "src/syn.y"
                             { (yyval.val) = -(yyvsp[0].val); show_value = TRUE; }
-#line 1684 "src/syn.tab.c"
+#line 1697 "src/syn.tab.c"
     break;
 
   case 23: /* exp: exp '^' exp  */
-#line 251 "src/syn.y"
+#line 264 "src/syn.y"
                       { (yyval.val) = pow ((yyvsp[-2].val), (yyvsp[0].val)); show_value = TRUE; }
-#line 1690 "src/syn.tab.c"
+#line 1703 "src/syn.tab.c"
     break;
 
   case 24: /* exp: '(' exp ')'  */
-#line 252 "src/syn.y"
+#line 265 "src/syn.y"
                       { (yyval.val) = (yyvsp[-1].val); show_value = TRUE; }
-#line 1696 "src/syn.tab.c"
+#line 1709 "src/syn.tab.c"
     break;
 
 
-#line 1700 "src/syn.tab.c"
+#line 1713 "src/syn.tab.c"
 
       default: break;
     }
@@ -1920,7 +1933,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 254 "src/syn.y"
+#line 267 "src/syn.y"
 
 
 void syn_parser_free(void){

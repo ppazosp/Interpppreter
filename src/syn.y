@@ -75,6 +75,8 @@ exp:    NUM { $$ = $1; }
 
                         show_value = FALSE;
                 }
+
+                free($1);
         }
         
         | UP { 
@@ -103,6 +105,8 @@ exp:    NUM { $$ = $1; }
 
                         show_value = FALSE;
                 }
+
+                free($1);
         }
 
         | LW '(' exp ')' { 
@@ -142,6 +146,8 @@ exp:    NUM { $$ = $1; }
                                 show_value = FALSE;
                         }
                 }
+
+                free($1);
         }
 
         | UP '(' ARG ')' { 
@@ -166,6 +172,9 @@ exp:    NUM { $$ = $1; }
 
                         show_value = FALSE;
                 }
+
+                free($1);
+                free($3);
         }
 
         | LW '=' exp {
@@ -200,6 +209,8 @@ exp:    NUM { $$ = $1; }
 
                         show_value = TRUE;
                 }
+
+                free($1);
         }
 
         | UP '=' exp {
@@ -237,6 +248,8 @@ exp:    NUM { $$ = $1; }
 
                         show_value = TRUE;
                 }
+
+                free($1);
         }
 
         | exp '+' exp { $$ = $1 + $3; show_value = TRUE; }
