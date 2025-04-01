@@ -16,7 +16,7 @@ void st_free(void);
 
 void st_print(void);
 
-void st_clean_vars(void);
+void st_clean_items(int full);
 
 void st_print_items(int type);
 

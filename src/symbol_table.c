@@ -47,7 +47,7 @@ void st_free(void) {
     free(st);
 }
 
-void st_clean_vars(void){
+void st_clean_items(int full){
     for (size_t i = 0; i < st->ht->size; i++) {
         Ht_item* item = st->ht->items[i];
         Ht_item* next = NULL;
@@ -56,7 +56,7 @@ void st_clean_vars(void){
             Token* token = item->token;
             next = item->next; 
 
-            if(token->id == IDENTIFIER ){            
+            if(token->id == IDENTIFIER || (full && token->id == CONSTANT)){            
                 if ((ht_delete(st->ht, token->key)) == -1){
                     eh_printerr("hash item could not be deleted", FATAL_ERROR, 0);
                     exit(EXIT_FAILURE);
